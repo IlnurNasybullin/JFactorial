@@ -49,7 +49,7 @@ public final class Factorials {
     private Factorials() {}
 
     /**
-     * Returns long representative of factorial digit. If digit < 21 (fits into long) will be returned {@link Optional} object
+     * Returns long representative of factorial digit. If digit &lt; 21 (fits into long) will be returned {@link Optional} object
      * with factorial value inside, otherwise, will be returned {@link Optional#empty()} object
      * @param n digit of factorial
      * @return {@link Optional} object with long factorial value, if it's exist, or {@link Optional#empty()} object
