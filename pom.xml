@@ -6,7 +6,7 @@
 
     <groupId>io.github.ilnurnasybullin</groupId>
     <artifactId>jfactorial</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <packaging>jar</packaging>
 
     <name>JFactorial</name>
@@ -57,7 +57,7 @@
             <id>IlnurNasybullin</id>
             <name>Ilnur Nasybullin</name>
             <roles>
-                <role>Lead</role>
+                <role>Java Developer</role>
             </roles>
             <url>https://github.com/IlnurNasybullin</url>
         </developer>
@@ -102,19 +102,7 @@
                             <id>attach-sources</id>
                             <goals>
                                 <goal>jar-no-fork</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>${plugin.maven.javadoc.ver}</version>
-                    <executions>
-                        <execution>
-                            <id>attach-javadocs</id>
-                            <goals>
-                                <goal>jar</goal>
+                                <goal>test-jar</goal>
                             </goals>
                         </execution>
                     </executions>
@@ -146,6 +134,18 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>test-jar</goal>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
                 <configuration>
@@ -170,7 +170,76 @@
                     </dependency>
                 </dependencies>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${plugin.maven.javadoc.ver}</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>copy-license-to-javadoc</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <mkdir dir="${basedir}/target/apidocs/META-INF"/>
+                                <copy todir="${basedir}/target/apidocs/META-INF">
+                                    <fileset dir="${basedir}" includes="LICENSE.txt"/>
+                                </copy>
+
+                                <mkdir dir="${basedir}/target/test-classes/META-INF"/>
+                                <copy todir="${basedir}/target/test-classes/META-INF">
+                                    <fileset dir="${basedir}" includes="LICENSE.txt"/>
+                                </copy>
+
+                                <mkdir dir="${basedir}/src/test/resources/META-INF"/>
+                                <copy todir="${basedir}/src/test/resources/META-INF">
+                                    <fileset dir="${basedir}" includes="LICENSE.txt"/>
+                                </copy>
+                            </target>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>remove-artifacts</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <delete
+                                    dir="${basedir}/src/test/resources/META-INF"
+                                    includeemptydirs="true"/>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
+        <resources>
+            <resource>
+                <directory>${basedir}</directory>
+                <targetPath>META-INF</targetPath>
+                <includes>
+                    <include>LICENSE.txt</include>
+                </includes>
+            </resource>
+        </resources>
     </build>
 
     <profiles>
