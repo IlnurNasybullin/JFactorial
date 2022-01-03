@@ -72,13 +72,13 @@ public final class Factorials {
      * @throws IllegalArgumentException if n is negative number
      */
     public static Optional<Long> longFactorial(int n) {
-        checkOnNegative(n);
+        checkOnNegative(n, String.format("digit is negative number! (n = %d)", n));
         return n < factorials.length ? Optional.of(factorials[n]) : Optional.empty();
     }
 
-    private static void checkOnNegative(int n) {
+    private static void checkOnNegative(int n, String errorMessage) {
         if (n < 0) {
-            throw new IllegalArgumentException(String.format("digit is negative number! (n = %d)", n));
+            throw new IllegalArgumentException(errorMessage);
         }
     }
 
@@ -93,7 +93,7 @@ public final class Factorials {
      * of natural series
      */
     public static BigInteger factorial(int n) {
-        checkOnNegative(n);
+        checkOnNegative(n, String.format("digit is negative number! (n = %d)", n));
 
         if (n < factorials.length) {
             return BigInteger.valueOf(factorials[n]);
@@ -105,13 +105,21 @@ public final class Factorials {
         long longValue = 1L;
         for (int i = k + 1; i <= n; i++) {
             longValue *= i;
-            if (bitsCount(longValue) + bitsCount(i + 1) > 63) {
+            if (!isLongMultiplyExact(longValue, i)) {
                 value = value.multiply(BigInteger.valueOf(longValue));
                 longValue = 1L;
             }
         }
 
+        if (longValue != 1L) {
+            value = value.multiply(BigInteger.valueOf(longValue));
+        }
+
         return value;
+    }
+
+    private static boolean isLongMultiplyExact(long longValue, int i) {
+        return bitsCount(longValue) + bitsCount(i + 1) <= 63;
     }
 
     private static int bitsCount(long longValue) {
@@ -152,7 +160,52 @@ public final class Factorials {
             n++;
         }
 
-        System.out.println(n-1);
+        System.out.println(n - 1);
         System.out.println(factSum);
+    }
+
+    public static BigInteger combinations(int n, int k) {
+        checkRangeClosed(k, n, String.format("k = %d is more than n = %d!", k, n));
+        checkOnNegative(k, String.format("k = %d is negative number!", k));
+
+        if (k == 0) {
+            return BigInteger.ONE;
+        }
+
+        int denValue = Math.min(k, n - k);
+
+        BigInteger numerator = multiplyRange(n - denValue + 1, n + 1);
+        BigInteger denominator = factorial(denValue);
+
+        return numerator.divide(denominator);
+    }
+
+    private static void checkRangeClosed(int start, int end, String errorMessage) {
+        if (end < start) {
+            throw new IllegalArgumentException(errorMessage);
+        }
+    }
+
+    private static BigInteger multiplyRange(int startInclusive, int endExclusive) {
+        if (startInclusive <= 0 && endExclusive > 0) {
+            return BigInteger.ZERO;
+        }
+
+        BigInteger result = BigInteger.ONE;
+        long termResult = 1L;
+
+        for (int i = startInclusive; i < endExclusive; i++) {
+            termResult *= i;
+            if (!isLongMultiplyExact(termResult, i + 1)) {
+                result = result.multiply(BigInteger.valueOf(termResult));
+                termResult = 1L;
+            }
+        }
+
+        if (termResult != 1L) {
+            result = result.multiply(BigInteger.valueOf(termResult));
+        }
+
+        return result;
     }
 }
