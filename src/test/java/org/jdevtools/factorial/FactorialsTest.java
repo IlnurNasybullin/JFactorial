@@ -35,125 +35,92 @@ public class FactorialsTest {
 
     @ParameterizedTest
     @MethodSource("_longValue_Success_DataSet")
-    public void getLogValue_Success(int[] array, Optional<Long>[] expectedValues) {
-        int n;
-        Optional<Long> result;
-        Optional<Long> factorial;
-
-        for (int i = 0; i < array.length; i++) {
-            n = array[i];
-            result = expectedValues[i];
-            factorial = Factorials.longFactorial(n);
-
-            assertEquals(result, factorial);
-        }
+    public void getLongValue_Success(int value, Optional<Long> expectedFactorial) {
+        Assertions.assertEquals(expectedFactorial, Factorials.longFactorial(value));
     }
 
     @ParameterizedTest
     @MethodSource("_longValue_Exception_DataSet")
-    public <X extends Exception> void getLongValue_Exception(int[] array, Class<X>[] exceptionTypes) {
-        Class<X> exception;
-        final int[] n = new int[1];
-
-        for (int i = 0; i < array.length; i++) {
-            n[0] = array[i];
-            exception = exceptionTypes[i];
-
-            Assertions.assertThrows(exception, () -> Factorials.longFactorial(n[0]));
-        }
+    public <X extends Exception> void getLongValue_Exception(int value, Class<X> expectedException) {
+        Assertions.assertThrows(expectedException, () -> Factorials.longFactorial(value));
     }
 
     @ParameterizedTest
     @MethodSource("_factorial_Success_DataSet")
-    public void getFactorial_Success(int[] array, BigInteger[] expectedValues) {
-        int n;
-        BigInteger expected;
-
-        for (int i = 0; i < array.length; i++) {
-            n = array[i];
-            expected = expectedValues[i];
-            Assertions.assertEquals(expected, Factorials.factorial(n));
-        }
+    public void getFactorial_Success(int value, BigInteger expectedFactorial) {
+        Assertions.assertEquals(expectedFactorial, Factorials.factorial(value));
     }
 
     @ParameterizedTest
     @MethodSource("_factorial_Exception_DataSet")
-    public <X extends Exception> void getFactorial_Exception(int[] array, Class<X>[] exceptionTypes) {
-        Class<X> exception;
-        final int[] n = new int[1];
-
-        for (int i = 0; i < array.length; i++) {
-            n[0] = array[i];
-            exception = exceptionTypes[i];
-
-            Assertions.assertThrows(exception, () -> Factorials.factorial(n[0]));
-        }
+    public <X extends Exception> void getFactorial_Exception(int value, Class<X> expectedException) {
+        Assertions.assertThrows(expectedException, () -> Factorials.factorial(value));
     }
 
     public static Stream<Arguments> _factorial_Exception_DataSet() {
-        int[] array = {-1, -4, -22, -100};
-        Class<IllegalArgumentException> exceptionType = IllegalArgumentException.class;
-        Class<IllegalArgumentException>[] exceptionTypes = new Class[]
-                {exceptionType, exceptionType, exceptionType, exceptionType};
-
-        return Stream.of(Arguments.of(
-                array, exceptionTypes
-        ));
+        return Stream.of(
+                Arguments.of(-1, IllegalArgumentException.class),
+                Arguments.of(-100, IllegalArgumentException.class)
+        );
     }
 
     public static Stream<Arguments> _factorial_Success_DataSet() {
-        int[] array = {0, 1, 2, 6, 12, 15, 20, 25, 30, 48, 100};
-        BigInteger[] values = new BigInteger[]{
-                BigInteger.ONE,
-                BigInteger.ONE,
-                BigInteger.TWO,
-                BigInteger.valueOf(720),
-                BigInteger.valueOf(479_001_600),
-                BigInteger.valueOf(1_307_674_368_000L),
-                BigInteger.valueOf(2_432_902_008_176_640_000L),
-                new BigInteger("15511210043330985984000000"),
-                new BigInteger("265252859812191058636308480000000"),
-                new BigInteger("12413915592536072670862289047373375038521486354677760000000000"),
-                new BigInteger("93326215443944152681699238856266700490715968264381621468592963895217599993229915608941463976156518286253697920827223758251185210916864000000000000000000000000")
-        };
-
-        return Stream.of(Arguments.of(
-                array, values
-        ));
+        return Stream.of(
+                Arguments.of(0, BigInteger.ONE),
+                Arguments.of(1, BigInteger.ONE),
+                Arguments.of(2, BigInteger.TWO),
+                Arguments.of(6, BigInteger.valueOf(720L)),
+                Arguments.of(12, BigInteger.valueOf(479_001_600L)),
+                Arguments.of(15, BigInteger.valueOf(1_307_674_368_000L)),
+                Arguments.of(20, BigInteger.valueOf(2_432_902_008_176_640_000L)),
+                Arguments.of(21, new BigInteger("51090942171709440000")),
+                Arguments.of(25, new BigInteger("15511210043330985984000000")),
+                Arguments.of(30, new BigInteger("265252859812191058636308480000000")),
+                Arguments.of(48, new BigInteger("12413915592536072670862289047373375038521486354677760000000000")),
+                Arguments.of(100, new BigInteger("93326215443944152681699238856266700490715968264381621468592963895217599993229915608941463976156518286253697920827223758251185210916864000000000000000000000000"))
+        );
     }
 
     public static Stream<Arguments> _longValue_Exception_DataSet() {
-        int[] array = {-4, -1, -12};
-        Class<IllegalArgumentException> exceptionType = IllegalArgumentException.class;
-        Class<IllegalArgumentException>[] exceptionTypes = new Class[]{exceptionType, exceptionType, exceptionType};
-
-        return Stream.of(Arguments.of(
-                array, exceptionTypes
-        ));
+        return Stream.of(
+                Arguments.of(-4, IllegalArgumentException.class),
+                Arguments.of(-1, IllegalArgumentException.class)
+        );
     }
 
     public static Stream<Arguments> _longValue_Success_DataSet() {
-        int[] array = {0, 1, 2, 6, 12, 15, 20, 21, 25};
-
-        Optional<Long>[] results = getOptionalsArray(
-                Optional.of(1L),
-                Optional.of(1L),
-                Optional.of(2L),
-                Optional.of(720L),
-                Optional.of(479_001_600L),
-                Optional.of(1_307_674_368_000L),
-                Optional.of(2_432_902_008_176_640_000L),
-                Optional.empty(),
-                Optional.empty()
+        return Stream.of(
+                Arguments.of(0, Optional.of(1L)),
+                Arguments.of(1, Optional.of(1L)),
+                Arguments.of(2, Optional.of(2L)),
+                Arguments.of(6, Optional.of(720L)),
+                Arguments.of(12, Optional.of(479_001_600L)),
+                Arguments.of(15, Optional.of(1_307_674_368_000L)),
+                Arguments.of(20, Optional.of(2_432_902_008_176_640_000L)),
+                Arguments.of(21, Optional.empty()),
+                Arguments.of(25, Optional.empty())
         );
-
-        return Stream.of(Arguments.of(
-                array, results
-        ));
     }
 
     @SuppressWarnings("unchecked")
     public static Optional<Long>[] getOptionalsArray(Optional<Long> ... values) {
         return values;
+    }
+
+    @ParameterizedTest
+    @MethodSource("_testCombinations_Success_DataSet")
+    public void testCombinations_Success(int n, int k, BigInteger expectedResult) {
+        Assertions.assertEquals(expectedResult, Factorials.combinations(n, k));
+    }
+
+    public static Stream<Arguments> _testCombinations_Success_DataSet() {
+        return Stream.of(
+                Arguments.of(0, 0, BigInteger.ONE),
+                Arguments.of(1, 0, BigInteger.ONE),
+                Arguments.of(1, 1, BigInteger.ONE),
+                Arguments.of(15, 4, BigInteger.valueOf(1_365L)),
+                Arguments.of(15, 7, BigInteger.valueOf(6_435L)),
+                Arguments.of(50, 15, BigInteger.valueOf(2_250_829_575_120L))
+        );
     }
 }

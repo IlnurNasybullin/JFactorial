@@ -35,92 +35,49 @@ public class FactorialNumberSystemsTest {
     @MethodSource({
             "_decimal2IntFactorials_Success_DataSet"
     })
-    public void decimal2IntFactorials_Success(BigInteger[] values, int[][] expectedResults) {
-        for (int i = 0; i < values.length; i++) {
-            Assertions.assertArrayEquals(expectedResults[i], decimal2IntFactorials(values[i]));
-        }
+    public void decimal2IntFactorials_Success(BigInteger value, int[] expectedResult) {
+        Assertions.assertArrayEquals(expectedResult, decimal2IntFactorials(value));
     }
 
     public static Stream<Arguments> _decimal2IntFactorials_Success_DataSet() {
-        BigInteger[] values = new BigInteger[] {
-                BigInteger.ZERO,
-                BigInteger.ONE,
-                BigInteger.ONE.negate(),
-                BigInteger.TWO,
-                BigInteger.TWO.negate(),
-                BigInteger.TEN,
-                BigInteger.TEN.negate(),
-                BigInteger.valueOf(12),
-                BigInteger.valueOf(12).negate(),
-                BigInteger.valueOf(20),
-                BigInteger.valueOf(20).negate(),
-                BigInteger.valueOf(24),
-                BigInteger.valueOf(24).negate(),
-                BigInteger.valueOf(100),
-                BigInteger.valueOf(100).negate(),
-                BigInteger.valueOf(120),
-                BigInteger.valueOf(120).negate(),
-                BigInteger.valueOf(1_000),
-                BigInteger.valueOf(1_000).negate(),
-                BigInteger.valueOf(10_000),
-                BigInteger.valueOf(10_000).negate(),
-                BigInteger.valueOf(100_000),
-                BigInteger.valueOf(100_000).negate()
-        };
-
-        int[][] expectedResults = new int[][] {
-                {},
-                {1},
-                {-1},
-                {0, 1},
-                {0, -1},
-                {0, 2, 1},
-                {0, -2, -1},
-                {0, 0, 2},
-                {0, 0, -2},
-                {0, 1, 3},
-                {0, -1, -3},
-                {0, 0, 0, 1},
-                {0, 0, 0, -1},
-                {0, 2, 0, 4},
-                {0, -2, 0, -4},
-                {0, 0, 0, 0, 1},
-                {0, 0, 0, 0, -1},
-                {0, 2, 2, 1, 2, 1},
-                {0, -2, -2, -1, -2, -1},
-                {0, 2, 2, 1, 5, 6, 1},
-                {0, -2, -2, -1, -5, -6, -1},
-                {0, 2, 2, 1, 5, 5, 3, 2},
-                {0, -2, -2, -1, -5, -5, -3, -2}
-        };
-
-        return Stream.of(Arguments.of(
-                values, expectedResults
-        ));
+        return Stream.of(
+                Arguments.of(BigInteger.ZERO, new int[]{}),
+                Arguments.of(BigInteger.ONE, new int[]{1}),
+                Arguments.of(BigInteger.ONE.negate(), new int[]{-1}),
+                Arguments.of(BigInteger.TWO, new int[]{0, 1}),
+                Arguments.of(BigInteger.TWO.negate(), new int[]{0, -1}),
+                Arguments.of(BigInteger.TEN, new int[]{0, 2, 1}),
+                Arguments.of(BigInteger.TEN.negate(), new int[]{0, -2, -1}),
+                Arguments.of(BigInteger.valueOf(12), new int[]{0, 0, 2}),
+                Arguments.of(BigInteger.valueOf(-12), new int[]{0, 0, -2}),
+                Arguments.of(BigInteger.valueOf(20), new int[]{0, 1, 3}),
+                Arguments.of(BigInteger.valueOf(-20), new int[]{0, -1, -3}),
+                Arguments.of(BigInteger.valueOf(24), new int[]{0, 0, 0, 1}),
+                Arguments.of(BigInteger.valueOf(-24), new int[]{0, 0, 0, -1}),
+                Arguments.of(BigInteger.valueOf(100), new int[]{0, 2, 0, 4}),
+                Arguments.of(BigInteger.valueOf(-100), new int[]{0, -2, 0, -4}),
+                Arguments.of(BigInteger.valueOf(120), new int[]{0, 0, 0, 0, 1}),
+                Arguments.of(BigInteger.valueOf(-120), new int[]{0, 0, 0, 0, -1}),
+                Arguments.of(BigInteger.valueOf(1_000), new int[]{0, 2, 2, 1, 2, 1}),
+                Arguments.of(BigInteger.valueOf(-1_000), new int[]{0, -2, -2, -1, -2, -1}),
+                Arguments.of(BigInteger.valueOf(10_000), new int[]{0, 2, 2, 1, 5, 6, 1}),
+                Arguments.of(BigInteger.valueOf(-10_000), new int[]{0, -2, -2, -1, -5, -6, -1}),
+                Arguments.of(BigInteger.valueOf(100_000), new int[]{0, 2, 2, 1, 5, 5, 3, 2}),
+                Arguments.of(BigInteger.valueOf(-100_000), new int[]{0, -2, -2, -1, -5, -5, -3, -2})
+        );
     }
 
     @ParameterizedTest
     @MethodSource({
            "_decimal2IntFactorials_Exception_DataSet"
     })
-    public <X extends Exception> void decimal2IntFactorials_Exception(BigInteger[] values, Class<X>[] expectedExceptions) {
-        int[] i = {0};
-        for (; i[0] < values.length; i[0]++) {
-            Assertions.assertThrows(expectedExceptions[i[0]], () -> decimal2IntFactorials(values[i[0]]));
-        }
+    public <X extends Exception> void decimal2IntFactorials_Exception(BigInteger value, Class<X> expectedException) {
+        Assertions.assertThrows(expectedException, () -> decimal2IntFactorials(value));
     }
 
     public static Stream<Arguments> _decimal2IntFactorials_Exception_DataSet() {
-        BigInteger[] values = new BigInteger[]{
-                null
-        };
-
-        Class<?>[] expectedExceptions = new Class[] {
-                NullPointerException.class
-        };
-
-        return Stream.of(Arguments.of(
-                values, expectedExceptions
-        ));
+        return Stream.of(
+                Arguments.of(null, NullPointerException.class)
+        );
     }
 }
