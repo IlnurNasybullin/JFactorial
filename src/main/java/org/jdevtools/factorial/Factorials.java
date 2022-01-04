@@ -100,30 +100,21 @@ public final class Factorials {
         }
 
         int k = maxLongFactorialDigit();
-        BigInteger value = BigInteger.valueOf(factorials[k]);
-
-        long longValue = 1L;
-        for (int i = k + 1; i <= n; i++) {
-            longValue *= i;
-            if (!isLongMultiplyExact(longValue, i)) {
-                value = value.multiply(BigInteger.valueOf(longValue));
-                longValue = 1L;
-            }
-        }
-
-        if (longValue != 1L) {
-            value = value.multiply(BigInteger.valueOf(longValue));
-        }
-
-        return value;
+        return BigInteger.valueOf(factorials[k]).multiply(multiplyRange(k + 1, n + 1));
     }
 
     private static boolean isLongMultiplyExact(long longValue, int i) {
-        return bitsCount(longValue) + bitsCount(i + 1) <= 63;
+        return bitLength(longValue) + bitLength(i + 1) <= 63;
     }
 
-    private static int bitsCount(long longValue) {
-        return 64 - Long.numberOfTrailingZeros(longValue);
+    private static int bitLength(long longValue) {
+        int bitLength = 0;
+        while (longValue != 0) {
+            bitLength += 1;
+            longValue >>= 1;
+        }
+
+        return bitLength;
     }
 
     /**
