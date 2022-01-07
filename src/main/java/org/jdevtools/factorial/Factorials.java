@@ -157,7 +157,7 @@ public final class Factorials {
      * @param n - things count
      * @param k - taken things count
      * @return {@link BigInteger} combination value.
-     * @throws IllegalArgumentException - if k < 0 or n < k
+     * @throws IllegalArgumentException - if k &lt; 0 or n &lt; k
      * @implNote For calculating combination C(n,k) = n!/(s!(n-s)!) (s = min(k, n-k) are calculating the numerator
      * n!/(n-s)! = (n-s+1)*(n-s+2)*...*(n-1)*n {@link #multiplyRange(int, int)} and denominator s! {@link #factorial(int)}
      * and the numerator is divided by the denominator. In future versions, faster ways of calculating combinations will
