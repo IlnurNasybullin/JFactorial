@@ -87,10 +87,10 @@ public final class Factorials {
      * @param n digit of factorial
      * @return {@link BigInteger} factorial value
      * @throws IllegalArgumentException if n is negative
-     * @implNote For calculating is used native multiplication of natural series from 21 to n. Calculations are performed
-     * in a loop first over long type variable and then, if possible overflow of long type, multiplies {@link BigInteger}
-     * value. In future version, for increasing the speed of calculations, can be used parallel multiplication with partition
-     * of natural series
+     * @implNote For calculating is used native multiplication of natural series from 21 to n {@link #multiplyRange(int, int)}.
+     * Calculations are performed in a loop first over long type variable and then, if possible overflow of long type,
+     * multiplies {@link BigInteger} value. In future version, for increasing the speed of calculations, can be used
+     * parallel multiplication with partition of natural series
      */
     public static BigInteger factorial(int n) {
         checkOnNegative(n, String.format("digit is negative number! (n = %d)", n));
@@ -150,14 +150,21 @@ public final class Factorials {
             factSum += Math.log(n)/ log2;
             n++;
         }
-
-        System.out.println(n - 1);
-        System.out.println(factSum);
     }
 
+    /**
+     * Return {@link BigInteger} representative combination of n things taken k at a time without repetition
+     * @param n - things count
+     * @param k - taken things count
+     * @return {@link BigInteger} combination value.
+     * @throws IllegalArgumentException - if k < 0 or n < k
+     * @implNote For calculating combination C(n,k) = n!/(s!(n-s)!) (s = min(k, n-k) are calculating the numerator
+     * n!/(n-s)! = (n-s+1)*(n-s+2)*...*(n-1)*n {@link #multiplyRange(int, int)} and denominator s! {@link #factorial(int)}
+     * and the numerator is divided by the denominator. In future versions, faster ways of calculating combinations will
+     * be considered
+     */
     public static BigInteger combinations(int n, int k) {
-        checkRangeClosed(k, n, String.format("k = %d is more than n = %d!", k, n));
-        checkOnNegative(k, String.format("k = %d is negative number!", k));
+        checkCombinations(n, k);
 
         if (k == 0) {
             return BigInteger.ONE;
@@ -169,6 +176,11 @@ public final class Factorials {
         BigInteger denominator = factorial(denValue);
 
         return numerator.divide(denominator);
+    }
+
+    private static void checkCombinations(int n, int k) {
+        checkRangeClosed(k, n, String.format("k = %d is more than n = %d!", k, n));
+        checkOnNegative(k, String.format("k = %d is negative number!", k));
     }
 
     private static void checkRangeClosed(int start, int end, String errorMessage) {
