@@ -23,10 +23,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.math.BigInteger;
 import java.util.Optional;
-
 import java.util.stream.Stream;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Testing static method of class {@link Factorials}
@@ -102,11 +99,6 @@ public class FactorialsTest {
         );
     }
 
-    @SuppressWarnings("unchecked")
-    public static Optional<Long>[] getOptionalsArray(Optional<Long> ... values) {
-        return values;
-    }
-
     @ParameterizedTest
     @MethodSource("_testCombinations_Success_DataSet")
     public void testCombinations_Success(int n, int k, BigInteger expectedResult) {
@@ -120,7 +112,25 @@ public class FactorialsTest {
                 Arguments.of(1, 1, BigInteger.ONE),
                 Arguments.of(15, 4, BigInteger.valueOf(1_365L)),
                 Arguments.of(15, 7, BigInteger.valueOf(6_435L)),
-                Arguments.of(50, 15, BigInteger.valueOf(2_250_829_575_120L))
+                Arguments.of(50, 15, BigInteger.valueOf(2_250_829_575_120L)),
+                Arguments.of(50, 25, BigInteger.valueOf(126_410_606_437_752L)),
+                Arguments.of(100, 40, new BigInteger("13746234145802811501267369720")),
+                Arguments.of(100, 50, new BigInteger("100891344545564193334812497256"))
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("_testCombinations_Exception_DataSet")
+    public <X extends Exception> void testCombinations_Exception(int n, int k, Class<X> expectedException) {
+        Assertions.assertThrows(expectedException, () -> Factorials.combinations(n, k));
+    }
+
+    public static Stream<Arguments> _testCombinations_Exception_DataSet() {
+        return Stream.of(
+                Arguments.of(0, 4, IllegalArgumentException.class),
+                Arguments.of(-3, -4, IllegalArgumentException.class),
+                Arguments.of(4, -3, IllegalArgumentException.class),
+                Arguments.of(-6, 0, IllegalArgumentException.class)
         );
     }
 }
