@@ -6,7 +6,7 @@
 
     <groupId>io.github.ilnurnasybullin</groupId>
     <artifactId>jfactorial</artifactId>
-    <version>1.0.3</version>
+    <version>1.1.0</version>
     <packaging>jar</packaging>
 
     <name>JFactorial</name>
@@ -24,8 +24,8 @@
     </licenses>
 
     <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
+        <maven.compiler.source>9</maven.compiler.source>
+        <maven.compiler.target>9</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <plugin.nexus.staging.ver>1.6.8</plugin.nexus.staging.ver>
@@ -68,13 +68,6 @@
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-params</artifactId>
             <version>5.8.2</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest</artifactId>
-            <version>2.2</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -156,7 +149,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.22.2</version>
+                <version>3.0.0-M3</version>
                 <dependencies>
                     <dependency>
                         <groupId>org.junit.platform</groupId>
@@ -256,6 +249,14 @@
                     <plugin>
                         <groupId>org.sonatype.plugins</groupId>
                         <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <version>1.6.8</version>
+                        <dependencies>
+                            <dependency>
+                                <groupId>com.thoughtworks.xstream</groupId>
+                                <artifactId>xstream</artifactId>
+                                <version>1.4.15</version> <!-- apparently this needs to be exactly this version -->
+                            </dependency>
+                        </dependencies>
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
